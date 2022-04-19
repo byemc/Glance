@@ -4,7 +4,7 @@ import pypresence, time, requests, json, platform # for presence
 import os, os.path
 
 default_conf = {
-    "client_id": "replaceWithYourClientID",
+    "client_id": 927336517985263667,
 }
 
 WORKING_DIRECTORY = os.path.join(os.getenv("HOME"), "Library","Application Support","Glance")
@@ -33,9 +33,11 @@ If you need help, please visit https://byemc.xyz/glance/help/gettingstarted#conf
 
 config = load_conf()
 
-
-r = pypresence.Presence(config["client_id"])
-r.connect()
+try:
+    r = pypresence.Presence(config["client_id"])
+    r.connect()
+except ConnectionRefusedError:
+    rumps.notification(title="Glance", subtitle="ERROR", message="Couldn't connect to Discord. Please relaunch the app to get RPC working.", )
 
 class getSongFrom:
     def spotify():
@@ -131,7 +133,7 @@ class GlanceApp(rumps.App):
         elif song[2] == "stopped":
             self.title = f"Stopped"
 
-        r.update(state=self.title, details=self.status, small_image=f"{self.player.lower()}")
+        r.update(state=self.title, details=self.status, large_image=f"{self.player.lower()}", large_text=str(self.player))
 
 if __name__ == "__main__":
     GlanceApp().run()
